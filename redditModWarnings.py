@@ -30,7 +30,8 @@ SUBREDDIT = configParser.get('config', 'subreddit')
 TARGETSUB = configParser.get('config', 'targetsub')
 # This is the to which warnings will be posted.
 
-KEYWORDS = configParser.get('config', 'keywords')
+KEYWORD1 = configParser.get('config', 'keyword1')
+KEYWORDS = [KEYWORD1]
 # These are the words you are looking for
 
 MAXPOSTS = 100
@@ -121,10 +122,14 @@ def warningBot():
         cur.execute('INSERT INTO oldcomments VALUES(?)', [cid])
         sql.commit()
 
-        print('Submitting for %s by %s' % (cid, cauthor))
+        print('Submitting for %s by %s to %s' % (cid, cauthor, TARGETSUB))
         pauthor = parent.author.name
         modnotes = splitcbody[1]
-        wtitle = 'Warning for %s: %s' % (pauthor, modnotes)
+
+        modnotestitle = (modnotes[:260] + '...') if len(modnotes) > 260 else modnotes
+        # if modnotes is longer than 260, truncate it
+
+        wtitle = 'Warning for %s: %s' % (pauthor, modnotestitle)
         wtext = 'Warning has been issued to %s for [this comment](%s). Mod notes: %s' % (pauthor, parent.permalink, modnotes)
         try:
             # comment.reply(wtext)
