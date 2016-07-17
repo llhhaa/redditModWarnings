@@ -1,0 +1,14 @@
+[config]
+keywords = ['Put the text you want the bot to look for here', 'the bot can look for multiple words or phrases separated by comments']
+id = assignedValue
+refresh = assignedValue
+scopes = account creddits edit flair history identity livemanage modconfig modcontributors modflair modlog modothers modposts modself modwiki mysubreddits privatemessages read report save submit subscribe vote wikiedit wikiread
+secret = assignedValue
+subreddit = yourSub
+uri = https://127.0.0.1:65010/authorize_callback
+useragent = yourSub warnings tracker v.01 (by /u/craneomotor)
+
+[notes]
+notes = for variables 'id', 'refresh', 'secret', replace the assigned values following this guide here: https://www.reddit.com/comments/3cm1p8/how_to_make_your_bot_use_oauth2/
+notes2 = current value for 'scopes' is all possible scopes. limit these if you are concerned about bot behavior or hijacking.
+notes3 = uri is the value to use if you are running this from your own computer. probably needs to change if running from a hosted server.
