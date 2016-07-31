@@ -21,6 +21,9 @@ APP_REFRESH = configParser.get('config', 'refresh')
 APP_SCOPES = configParser.get('config', 'scopes')
 # https://www.reddit.com/comments/3cm1p8/how_to_make_your_bot_use_oauth2/
 
+AUTHOR = configParser.get('config', 'author')
+#reddit username to send bug reports to
+
 USERAGENT = configParser.get('config', 'useragent')
 # This is a short description of what the bot does.
 
@@ -126,10 +129,10 @@ def warningBot():
         pauthor = parent.author.name
         modnotes = splitcbody[1]
 
-        modnotestitle = (modnotes[:260] + '...') if len(modnotes) > 260 else modnotes
+        modnotestitle = (modnotes[:235] + '...') if len(modnotes) > 235 else modnotes
         # if modnotes is longer than 260, truncate it
 
-        wtitle = 'Warning for %s: %s' % (pauthor, modnotestitle)
+        wtitle = 'Warning for %s from %s: %s' % (pauthor, cauthor, modnotestitle)
         wtext = 'Warning has been issued to %s for [this comment](%s). Mod notes: %s' % (pauthor, parent.permalink, modnotes)
         try:
             # comment.reply(wtext)
@@ -143,7 +146,10 @@ while True:
         warningBot()
         cycles += 1
     except Exception as e:
+        # TODO: break out error handling into own def
+        r.send_message(AUTHOR, 'chekaWarnings error', e)
         traceback.print_exc()
+        time.sleep(WAIT)
     if cycles >= CLEANCYCLES:
         print('Cleaning database')
         cur.execute('DELETE FROM oldcomments WHERE id NOT IN (SELECT id FROM oldcomments ORDER BY id DESC LIMIT ?)', [MAXPOSTS * 2])
