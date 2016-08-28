@@ -115,7 +115,8 @@ def warningBot():
             # Does not contain our keyword
             continue
 
-        splitcbody = cbody.split(":")
+        keyphrase = KEYWORD1.lower()
+        splitcbody = cbody.split(keyphrase)
         if not type(splitcbody) is list:
             continue
         if len(splitcbody) > 2:
@@ -126,7 +127,7 @@ def warningBot():
         sql.commit()
 
         print('Submitting for %s by %s to %s' % (cid, cauthor, TARGETSUB))
-        pauthor = parent.author.name
+        pauthor = parent.author and parent.author.name or '[deleted user/comment]'
         modnotes = splitcbody[1]
 
         modnotestitle = (modnotes[:235] + '...') if len(modnotes) > 235 else modnotes
@@ -149,7 +150,7 @@ while True:
         # TODO: break out error handling into own def
         r.send_message(AUTHOR, 'chekaWarnings error', e)
         traceback.print_exc()
-        time.sleep(WAIT)
+        time.sleep(120)
     if cycles >= CLEANCYCLES:
         print('Cleaning database')
         cur.execute('DELETE FROM oldcomments WHERE id NOT IN (SELECT id FROM oldcomments ORDER BY id DESC LIMIT ?)', [MAXPOSTS * 2])
